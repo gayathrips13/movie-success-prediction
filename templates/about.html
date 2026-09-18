@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+{% block content %}
+<section class="hero" style="padding-bottom:30px">
+  <div class="eyebrow">PROJECT DOCUMENTATION</div>
+  <h1>About the <span class="gradient">ML System</span></h1>
+  <p>A college-ready end-to-end Data Science project using Python, Pandas, Scikit-learn and a Flask web application.</p>
+</section>
+<div class="grid">
+  <div class="stat"><div class="icon">🐍</div><b>Python</b><span>Backend & data processing</span></div>
+  <div class="stat"><div class="icon">🐼</div><b>Pandas</b><span>CSV cleaning & analysis</span></div>
+  <div class="stat"><div class="icon">🤖</div><b>Scikit-learn</b><span>Gradient Boosting model</span></div>
+  <div class="stat"><div class="icon">🌐</div><b>Flask</b><span>Web application backend</span></div>
+</div>
+<div class="section-title"><div><h2>Methodology</h2><p>How your project works from dataset to prediction.</p></div></div>
+<div class="panel">
+  <div class="feature-list">
+    <div class="feature-item"><b>1. Data Collection</b><p style="color:var(--muted);font-size:11px">Upload an IMDb/movie CSV dataset through the website.</p></div>
+    <div class="feature-item"><b>2. Data Cleaning</b><p style="color:var(--muted);font-size:11px">Convert numeric columns, handle missing values and remove invalid rows.</p></div>
+    <div class="feature-item"><b>3. Feature Engineering</b><p style="color:var(--muted);font-size:11px">Create log-transformed votes and gross features to reduce skew.</p></div>
+    <div class="feature-item"><b>4. Target Creation</b><p style="color:var(--muted);font-size:11px">IMDb Rating ≥ 8.0 is labeled as movie success.</p></div>
+    <div class="feature-item"><b>5. ML Training</b><p style="color:var(--muted);font-size:11px">Gradient Boosting Classifier learns patterns from the training data.</p></div>
+    <div class="feature-item"><b>6. Evaluation</b><p style="color:var(--muted);font-size:11px">Accuracy, precision, recall, F1 and ROC-AUC are calculated on held-out data.</p></div>
+  </div>
+</div>
+<div class="section-title"><div><h2>Important Academic Note</h2><p>How to explain the model correctly.</p></div></div>
+<div class="panel"><p style="color:var(--muted);line-height:1.8;font-size:12px">
+This project is a supervised classification demonstration. The current target is defined from IMDb Rating, while the prediction features include year, runtime, votes and gross revenue. Because votes and gross are post-release signals, this model should be described as a movie-success assessment/prediction based on available movie performance features rather than a pure pre-release box-office forecasting model.
+</p></div>
+{% endblock %}

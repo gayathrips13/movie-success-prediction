@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+{% block content %}
+<section class="hero" style="padding-bottom:25px">
+  <div class="eyebrow">MODEL CONTROL CENTER</div>
+  <h1>Analytics <span class="gradient">Dashboard</span></h1>
+  <p>Explore dataset scale, model performance, movie trends and feature importance.</p>
+</section>
+
+{% if state.trained %}
+<div class="grid">
+  <div class="stat"><div class="icon">🎬</div><b>{{ state.metrics.total }}</b><span>Total movies</span></div>
+  <div class="stat"><div class="icon">📈</div><b>{{ state.metrics.accuracy }}%</b><span>Accuracy</span></div>
+  <div class="stat"><div class="icon">🎯</div><b>{{ state.metrics.f1 }}%</b><span>F1 score</span></div>
+  <div class="stat"><div class="icon">🏆</div><b>{{ state.metrics.auc if state.metrics.auc is not none else "—" }}{% if state.metrics.auc is not none %}%{% endif %}</b><span>ROC-AUC</span></div>
+</div>
+
+<div class="section-title"><div><h2>Model performance</h2><p>Hold-out test-set metrics from the current training run.</p></div>
+<form action="{{ url_for('retrain') }}" method="post"><button class="btn btn-secondary">↻ Retrain Model</button></form></div>
+<div class="panel">
+  <div class="grid">
+    <div class="stat"><b>{{ state.metrics.precision }}%</b><span>Precision</span></div>
+    <div class="stat"><b>{{ state.metrics.recall }}%</b><span>Recall</span></div>
+    <div class="stat"><b>{{ state.metrics.train_size }}</b><span>Training samples</span></div>
+    <div class="stat"><b>{{ state.metrics.test_size }}</b><span>Testing samples</span></div>
+  </div>
+</div>
+
+<div class="section-title"><div><h2>Visual Analytics</h2><p>Genre distribution and release-year activity.</p></div></div>
+<div class="charts">
+  <div class="panel chart-box"><h3>Top Genres</h3><canvas id="genreChart"></canvas></div>
+  <div class="panel chart-box"><h3>Movies by Year</h3><canvas id="yearChart"></canvas></div>
+</div>
+
+<div class="section-title"><div><h2>Feature Importance</h2><p>Relative contribution learned by the Gradient Boosting model.</p></div></div>
+<div class="panel">
+  <div class="feature-list">
+  {% for item in state.feature_importance %}
+    <div class="feature-item">
+      <b>{{ item.name }}</b><span style="float:right;color:#ff91c3;font-size:11px">{{ item.value }}%</span>
+      <div class="bar"><i style="width:{{ item.value }}%"></i></div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+
+<div class="section-title"><div><h2>Top Rated Movies</h2><p>Highest IMDb ratings in the uploaded dataset.</p></div></div>
+<div class="panel">
+  <div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Movie</th><th>Rating</th><th>Year</th></tr></thead><tbody>
+  {% for m in state.charts.top_movies %}
+  <tr><td>{{ loop.index }}</td><td>{{ m.title }}</td><td>⭐ {{ m.rating }}</td><td>{{ m.year or "—" }}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+</div>
+
+<div class="section-title"><div><h2>Dataset Preview</h2><p>First rows after upload.</p></div></div>
+<div class="panel"><div class="table-wrap"><table class="table"><thead><tr>{% for c in state.columns[:8] %}<th>{{ c }}</th>{% endfor %}</tr></thead><tbody>
+{% for row in state.preview %}<tr>{% for c in state.columns[:8] %}<td>{{ row.get(c,"") }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const genreData={{ state.charts.genres|tojson }};
+const yearData={{ state.charts.years|tojson }};
+new Chart(document.getElementById('genreChart'),{
+ type:'bar',data:{labels:genreData.map(x=>x.label),datasets:[{label:'Movies',data:genreData.map(x=>x.value),borderRadius:7}]},
+ options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9da4bb'},grid:{display:false}},y:{ticks:{color:'#9da4bb'},grid:{color:'rgba(255,255,255,.06)'}}}}
+});
+new Chart(document.getElementById('yearChart'),{
+ type:'line',data:{labels:yearData.map(x=>x.label),datasets:[{label:'Movies',data:yearData.map(x=>x.value),tension:.35,fill:true}]},
+ options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9da4bb',maxTicksLimit:10},grid:{display:false}},y:{ticks:{color:'#9da4bb'},grid:{color:'rgba(255,255,255,.06)'}}}}
+});
+</script>
+{% else %}
+<div class="panel empty"><div class="big">📂</div><b>No model is trained yet.</b><p>Go to Home and upload your movie CSV dataset.</p><a class="btn btn-primary" href="{{ url_for('index') }}">Go to Upload</a></div>
+{% endif %}
+{% endblock %}

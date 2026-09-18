@@ -1,0 +1,34 @@
+
+{% extends "base.html" %}
+{% block content %}
+<section class="hero" style="padding-bottom:25px">
+  <div class="eyebrow">PREDICTION COMPLETE</div>
+  <h1>Movie <span class="gradient">Prediction</span></h1>
+  <p>The trained Gradient Boosting model has evaluated your movie details.</p>
+</section>
+<div class="result">
+  <div class="panel result-main">
+    <div style="font-size:35px">{{ "🎉" if result.prediction else "📊" }}</div>
+    <h2>{{ result.label }}</h2>
+    <p>{{ result.movie_name }}</p>
+    <div class="ring" style="background:conic-gradient(var(--pink) {{ result.probability*3.6 }}deg, #ffffff12 0deg)">
+      <div class="ring-in"><b>{{ result.probability }}%</b><span>success probability</span></div>
+    </div>
+    <p>{{ "Strong predicted success signal based on the model inputs." if result.prediction else "Lower predicted success signal based on the model inputs." }}</p>
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Predict Another Movie →</a>
+  </div>
+  <div class="panel">
+    <h2 style="font-family:Outfit">Movie Details</h2>
+    <p style="color:var(--muted);font-size:12px">Values sent to the Python ML backend.</p>
+    <div class="summary" style="margin-top:20px">
+      <div><span>Movie</span><b>{{ result.movie_name }}</b></div>
+      <div><span>Release Year</span><b>{{ result.year }}</b></div>
+      <div><span>Runtime</span><b>{{ result.runtime }} min</b></div>
+      <div><span>Votes</span><b>{{ "{:,}".format(result.votes) }}</b></div>
+      <div><span>Gross Revenue</span><b>{{ "{:,.0f}".format(result.gross) }}</b></div>
+      <div><span>Model</span><b>Gradient Boosting</b></div>
+    </div>
+    <div class="form-note" style="margin-top:18px"><b>Project note:</b> During training, movies with IMDb Rating ≥ 8.0 are labeled successful. The predictor uses release year, runtime, vote volume and gross revenue.</div>
+  </div>
+</div>
+{% endblock %}

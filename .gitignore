@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+model/artifacts.json
+data/movies.csv
+data/uploads/
+.venv/
+venv/
+.venv/
+venv/

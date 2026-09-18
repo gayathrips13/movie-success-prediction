@@ -1,0 +1,24 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Movie Success prediction platform</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav"><div class="nav-inner container">
+<a class="brand" href="{{ url_for('index') }}"><div class="logo">🎬</div><div><b>MoviePredict</b><small>ML Analytics Studio</small></div></a>
+<div class="nav-links"><a href="{{ url_for('index') }}">Predict</a><a href="{{ url_for('dashboard') }}">Dashboard</a><a href="{{ url_for('about') }}">Methodology</a></div>
+<div class="badge">{{ state.model_name }}</div>
+</div></nav>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+{% endwith %}
+{% block content %}{% endblock %}
+<footer>Movie Success Prediction • Python + Pandas + Scikit-learn + Flask</footer>
+</div>
+</body>
+</html>
